@@ -15,20 +15,28 @@ const userSchema = new Schema(
     },
     image: {
       type: String,
-      required: [true, 'Password is required.']
+      required: [true, 'Image is required.']
     },
     commented: {
-      type: Schema.Types.ObjectId,
+      type: [Schema.Types.ObjectId],
       ref: 'Post'
     },
     liked: {
-      type: Schema.Types.ObjectId,
+      type: [Schema.Types.ObjectId],
       ref: 'Post'
     },
     published: {
-      type: Schema.Types.ObjectId,
+      type: [Schema.Types.ObjectId],
       ref: 'Post'
     },
+    following: {
+      type: [Schema.Types.ObjectId],
+      ref: 'User'
+    },
+    followers: {
+      type: [Schema.Types.ObjectId],
+      ref: 'User'
+    }
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`    

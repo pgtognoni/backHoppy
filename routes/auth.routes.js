@@ -66,9 +66,9 @@ router.get('/profile', isAuthenticated, async (req, res) => {
     try {
         //we need to add the populate from the post before returning the user
         // User.findOne({ username: username }).populate('posts')
-        const user = await User.findOne({ username: username })
+        const user = await User.findOne({ username: username }).populate('commented').populate('liked').populate('published').populate('followers').populate('following')
         //here we also need to send the user the posts
-        res.status(200).json({user: user.username, email: user.email})
+        res.status(200).json({user: user.username, email: user.email, commented: user.commented, liked: user.liked, published: user.published, followers: user.followers, following: user.following})
     } catch (error) {
         console.log(error)
     }
