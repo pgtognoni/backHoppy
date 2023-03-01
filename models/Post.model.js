@@ -22,7 +22,7 @@ const postSchema = new Schema(
       type: [Schema.Types.ObjectId],
       ref: 'Comment'
     },
-    ikes: {
+    likes: {
       type: Number,
       default: 0
     },
