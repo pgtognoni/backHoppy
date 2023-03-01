@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs')
 const isAuthenticated = require('../middlewares/isAuthenticated')
 const User = require('../models/User.model')
 
+
 router.post('/signup', async (req, res, next) => {
   /* Get back the payload from your request, as it's a POST you can access req.body */
   const body = req.body
@@ -13,7 +14,7 @@ router.post('/signup', async (req, res, next) => {
     const salt = bcrypt.genSaltSync(13)
     const hash = bcrypt.hashSync(body.password, salt)
     /* Record your user to the DB */
-    const newUser = await User.create({username: body.username, passwordHash: hash})
+    const newUser = await User.create({username: body.username, email: body.email, password: hash})
     res.status(201).json({message: 'User Created'})
   } catch (err) {
     console.log(err)
@@ -29,7 +30,7 @@ router.post('/login', async (req, res, next) => {
     /* Try to get your user from the DB */
     const user = await User.findOne({username: body.username})
     /* If your user exists, check if the password is correct */
-    if (user && bcrypt.compareSync(body.password, user.passwordHash)) {
+    if (user && bcrypt.compareSync(body.password, user.password)) {
     /* If your password is correct, sign the JWT using jsonwebtoken */
     const authToken = jwt.sign(
       {
@@ -59,5 +60,39 @@ router.post('/verify',isAuthenticated, async (req, res, next) => {
     console.log(err.message)
   }
 })
+
+router.get('/profile', isAuthenticated, async (req, res) => {
+    const username = req.payload.data.username
+    try {
+        //we need to add the populate from the post before returning the user
+        // User.findOne({ username: username }).populate('posts')
+        const user = await User.findOne({ username: username })
+        //here we also need to send the user the posts
+        res.status(200).json({user: user.username, email: user.email})
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+router.put('/profile', isAuthenticated, async (req, res, next) => {
+    const body = req.body
+    const username = req.payload.data.username
+    try { 
+        const user = await User.findOneAndUpdate({ username: username }, body, { new: true })
+        res.status(200).json(user)
+    } catch (error) { 
+        console.log(error)
+    }
+ })
+
+ router.delete('/delete', isAuthenticated, async (req, res, next) => {
+    const username = req.payload.data.username
+    try {
+        await User.findOneAndDelete({ username: username })
+        res.status(200).json({message: 'User Deleted'})
+    } catch (error) {
+        console.log(error)
+    }
+ })
 
 module.exports = router
