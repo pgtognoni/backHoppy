@@ -13,7 +13,7 @@ router.post('/signup', async (req, res, next) => {
     const salt = bcrypt.genSaltSync(13)
     const hash = bcrypt.hashSync(body.password, salt)
     /* Record your user to the DB */
-    const newUser = await User.create({username: body.username, passwordHash: hash})
+    const newUser = await User.create({username: body.username, email: body.email, password: hash})
     res.status(201).json({message: 'User Created'})
   } catch (err) {
     console.log(err)
@@ -29,7 +29,7 @@ router.post('/login', async (req, res, next) => {
     /* Try to get your user from the DB */
     const user = await User.findOne({username: body.username})
     /* If your user exists, check if the password is correct */
-    if (user && bcrypt.compareSync(body.password, user.passwordHash)) {
+    if (user && bcrypt.compareSync(body.password, user.password)) {
     /* If your password is correct, sign the JWT using jsonwebtoken */
     const authToken = jwt.sign(
       {
