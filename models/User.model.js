@@ -9,16 +9,26 @@ const userSchema = new Schema(
       unique: [true, "That username is already taken"],
       trim: true,
     },
-    email: {
-      type: String,
-      required: [true, 'Email is required.'],
-      lowercase: true,
-      trim: true
-    },
     password: {
       type: String,
       required: [true, 'Password is required.']
-    }
+    },
+    image: {
+      type: String,
+      required: [true, 'Password is required.']
+    },
+    commented: {
+      type: Schema.Types.ObjectId,
+      ref: 'Post'
+    },
+    liked: {
+      type: Schema.Types.ObjectId,
+      ref: 'Post'
+    },
+    published: {
+      type: Schema.Types.ObjectId,
+      ref: 'Post'
+    },
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`    
