@@ -17,6 +17,6 @@ const commentSchema = new Schema(
   }
 );
 
-const User = model("User", commentSchema);
+const Comment = model("Comment", commentSchema);
 
-module.exports = User;
+module.exports = Comment;
