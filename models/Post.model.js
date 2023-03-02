@@ -14,17 +14,21 @@ const postSchema = new Schema(
       type: String,
       enum: ["link", "image", "video"]
     },
-    commented: {
-      type: [Schema.Types.ObjectId],
-      ref: 'Post'
+    section: {
+      type: String,
+      enum: ["meme", "lifestyle", "educational", "gaming", "food", "business"]
     },
-    liked: {
+    comments: {
       type: [Schema.Types.ObjectId],
-      ref: 'Post'
+      ref: 'Comment'
     },
-    published: {
-      type: [Schema.Types.ObjectId],
-      ref: 'Post'
+    likes: {
+      type: Number,
+      default: 0
+    },
+    dislikes: {
+      type: Number,
+      default: 0
     },
   },
   {
@@ -33,6 +37,6 @@ const postSchema = new Schema(
   }
 );
 
-const Post = model("Post", userSchema);
+const Post = model("Post", postSchema);
 
 module.exports = Post;
