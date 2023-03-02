@@ -16,6 +16,7 @@ const postSchema = new Schema(
     },
     content: {
       type: String,
+      default: ""
     },
     section: {
       type: String,
