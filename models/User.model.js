@@ -14,8 +14,7 @@ const userSchema = new Schema(
       required: [true, 'Password is required.']
     },
     image: {
-      type: String,
-      required: [true, 'Image is required.']
+      type: String,    
     },
     commented: {
       type: [Schema.Types.ObjectId],
