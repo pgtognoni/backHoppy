@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const Comment = require('../models/Post.model')
-const Post = require('../models/Post.model')
+const User = require('../models/User.model')
 
 
 
