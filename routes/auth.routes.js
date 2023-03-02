@@ -42,7 +42,7 @@ router.post('/login', async (req, res, next) => {
         algorithm: 'HS256',
       }
     )
-    res.status(200).json({token: authToken})
+    res.status(200).json({token: authToken, user: user.username, image: user.image || undefined})
     }
   } catch (err) {
     console.log(err)
