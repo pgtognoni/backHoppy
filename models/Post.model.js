@@ -14,6 +14,9 @@ const postSchema = new Schema(
       type: String,
       enum: ["link", "image", "video"]
     },
+    content: {
+      type: String,
+    },
     section: {
       type: String,
       enum: ["meme", "lifestyle", "educational", "gaming", "food", "business"]
