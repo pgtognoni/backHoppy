@@ -29,8 +29,8 @@ router.get("/:postId", async (req, res) => {
 router.post("/new",async (req, res) => {
     try{
         const body = {...req.body};
-       const newPost = await Post.create(body);
-        res.json(newPost);
+        const newPost = await Post.create(body);
+        res.status(201).json(newPost);
     }catch(err){
         console.log(err)
     }

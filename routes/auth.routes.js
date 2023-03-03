@@ -42,7 +42,8 @@ router.post('/login', async (req, res, next) => {
         algorithm: 'HS256',
       }
     )
-    res.status(200).json({token: authToken, user: user.username, image: user.image || undefined})
+    
+    res.status(200).json({token: authToken, user: user.username, image: user.image || undefined, userId: user._id})
     }
   } catch (err) {
     console.log(err)
@@ -68,7 +69,7 @@ router.get('/profile', isAuthenticated, async (req, res) => {
         // User.findOne({ username: username }).populate('posts')
         const user = await User.findOne({ username: username }).populate('commented').populate('liked').populate('published').populate('followers').populate('following')
         //here we also need to send the user the posts
-        res.status(200).json({user: user.username, email: user.email, commented: user.commented, liked: user.liked, published: user.published, followers: user.followers, following: user.following})
+        res.status(200).json({ user })
     } catch (error) {
         console.log(error)
     }

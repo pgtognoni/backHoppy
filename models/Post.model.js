@@ -12,7 +12,7 @@ const postSchema = new Schema(
     },
     type: {
       type: String,
-      enum: ["link", "image", "video"]
+      enum: ["image", "video"]
     },
     section: {
       type: String,
