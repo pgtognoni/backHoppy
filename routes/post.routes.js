@@ -30,7 +30,7 @@ router.post("/new",async (req, res) => {
     try{
         const body = {...req.body};
        const newPost = await Post.create(body);
-        res.json(newPost);
+        res.status(201).json(newPost);
     }catch(err){
         console.log(err)
     }

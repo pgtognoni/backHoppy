@@ -34,6 +34,10 @@ const postSchema = new Schema(
       type: Number,
       default: 0
     },
+    createdBy:{
+      type: [Schema.Types.ObjectId],
+      ref: 'User'
+    }
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`    
