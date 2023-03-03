@@ -29,9 +29,12 @@ router.get("/:commentId", async (req, res) => {
 })
 // Create a new comment
 router.post("/new",async (req, res) => {
+    const userId = req.body.createdBy
+    const postId = req.body.postId
     try{
         const body = req.body;
-       const newComment = await Comment.create(body);
+        const newComment = await Comment.create(body);
+        const user = await User.findByIdAndUpdate(userId, {$push: {commented: postId}})
         res.json(newComment);
     }catch(err){
         console.log(err)
@@ -52,8 +55,8 @@ router.put("/:commentId/update",async (req, res) => {
 router.delete("/:commentId/delete",async (req, res) => {
     try{
         const commentId = req.params.commentId;
-       const deletedComment = await Post.findByIdAnddelete(commentId, body, {new:true});
-       res.json({message:"Comment deleted",deletedComment});
+        const deletedComment = await Post.findByIdAnddelete(commentId, body, {new:true});
+        res.json({message:"Comment deleted",deletedComment});
 
     }catch(err){
         console.log(err)

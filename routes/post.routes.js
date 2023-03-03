@@ -3,13 +3,13 @@ const router = express.Router();
 const isAuthenticated = require('../middlewares/isAuthenticated')
 const Post = require('../models/Post.model')
 const Comment = require('../models/Comment.model')
+const User = require('../models/User.model')
 
 // Get all posts
 router.get("/",async (req, res) => {
     try{
-        const posts = await Post.find()
+        const posts = await Post.find().populate('comments').populate('createdBy')
         res.json(posts); 
-
     }catch(err){
         console.log(err)
     }
@@ -20,16 +20,17 @@ router.get("/:postId", async (req, res) => {
        const postId = req.params.postId;
        const post = await Post.findById(postId).populate("comments")
        res.json(post);
-
     }catch(err){
         console.log(err)
     }
 })
 // Create a new post
 router.post("/new",async (req, res) => {
+    const userId = req.body.createdBy
     try{
         const body = {...req.body};
         const newPost = await Post.create(body);
+        const user = await User.findByIdAndUpdate(userId, {$push: {published: newPost._id}})
         res.status(201).json(newPost);
     }catch(err){
         console.log(err)
