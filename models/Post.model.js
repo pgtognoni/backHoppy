@@ -14,6 +14,10 @@ const postSchema = new Schema(
       type: String,
       enum: ["image", "video"]
     },
+    content: {
+      type: String,
+      default: ""
+    },
     section: {
       type: String,
       enum: ["meme", "lifestyle", "educational", "gaming", "food", "business"]
@@ -30,6 +34,10 @@ const postSchema = new Schema(
       type: Number,
       default: 0
     },
+    createdBy:{
+      type: [Schema.Types.ObjectId],
+      ref: 'User'
+    }
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`    

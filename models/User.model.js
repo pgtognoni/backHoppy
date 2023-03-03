@@ -17,7 +17,7 @@ const userSchema = new Schema(
       type: String,
     },
     image: {
-      type: String,
+      type: String,    
     },
     commented: {
       type: [Schema.Types.ObjectId],
@@ -38,6 +38,10 @@ const userSchema = new Schema(
     followers: {
       type: [Schema.Types.ObjectId],
       ref: 'User'
+    },
+    currency: {
+      type: Number,
+      default: 0
     }
   },
   {
