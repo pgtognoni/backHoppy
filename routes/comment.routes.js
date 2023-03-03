@@ -3,13 +3,14 @@ const express = require('express');
 const router = express.Router();
 const Comment = require('../models/Post.model')
 const User = require('../models/User.model')
+const Post = require('../models/Post.model')
 
 
 
 // Get all comments
 router.get("/",async (req, res, next) => {
     try{
-        const posts = await Comment.find()
+        const posts = await Comment.find().populate('user')
         res.json(posts);  
 
     }catch(err){
@@ -35,6 +36,7 @@ router.post("/new",async (req, res) => {
         const body = req.body;
         const newComment = await Comment.create(body);
         const user = await User.findByIdAndUpdate(userId, {$push: {commented: postId}})
+        const post = await Post.findByIdAndUpdate(postId, {$push: {comments: newComment._id}})
         res.json(newComment);
     }catch(err){
         console.log(err)
