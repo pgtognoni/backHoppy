@@ -8,7 +8,7 @@ const User = require('../models/User.model')
 // Get all posts
 router.get("/",async (req, res) => {
     try{
-        const posts = await Post.find().populate('createdBy')
+        const posts = await Post.find().populate('createdBy').populate('comments')
         res.json(posts); 
     }catch(err){
         console.log(err)
