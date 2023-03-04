@@ -33,9 +33,9 @@ const Post = require('../models/Post.model')
 router.post("/new",async (req, res) => {
     const userId = req.body.user
     const postId = req.body.postId
-    try{
-        const body = req.body;
-        const newComment = await Comment.create({user: req.body.user, body: req.body.body});
+    try{        
+        const userInfo = await User.findById(userId)
+        const newComment = await Comment.create({user: req.body.user, body: req.body.body, image: userInfo.image, username: userInfo.username});
         const user = await User.findByIdAndUpdate(userId, {$push: {commented: postId}})
         const post = await Post.findByIdAndUpdate(postId, {$push: {comments: newComment._id}})
         res.json(newComment);

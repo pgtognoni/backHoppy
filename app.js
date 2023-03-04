@@ -27,7 +27,8 @@ app.use('/posts', postRoutes)
 const commentsRoutes = require('./routes/comment.routes')
 app.use('/comments', commentsRoutes)
 
-
+const filterRoutes = require('./routes/filter.routes')
+app.use('/filter', filterRoutes)
 
 
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes

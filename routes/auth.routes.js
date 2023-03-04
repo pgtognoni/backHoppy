@@ -42,8 +42,9 @@ router.post('/login', async (req, res, next) => {
         algorithm: 'HS256',
       }
     )
-    
-    res.status(200).json({token: authToken, user: user.username, image: user.image || undefined, userId: user._id})
+    const {password, ...newUser} = user._doc
+   
+    res.status(200).json({token: authToken, user: newUser})
     }
   } catch (err) {
     console.log(err)
@@ -51,12 +52,15 @@ router.post('/login', async (req, res, next) => {
   }
 })
 
-router.post('/verify',isAuthenticated, async (req, res, next) => {
+router.get('/verify',isAuthenticated, async (req, res, next) => {
   // You need to use the middleware there, if the request passes the middleware, it means your token is good
   try {
     if (req.payload) {
-      res.json(req.payload.data.username)
-    }
+      const username = req.payload.data.username
+      const user = await User.findOne({username: username})
+      const {password, ...newUser} = user._doc
+      res.status(200).json({user: newUser})
+      }
   } catch (err) {
     console.log(err.message)
   }
