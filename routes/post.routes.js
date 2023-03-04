@@ -8,17 +8,18 @@ const User = require('../models/User.model')
 // Get all posts
 router.get("/",async (req, res) => {
     try{
-        const posts = await Post.find().populate('createdBy')
+        const posts = await Post.find().populate('createdBy').populate('comments')
         res.json(posts); 
     }catch(err){
         console.log(err)
     }
 })
+
 // Get a single post
 router.get("/:postId", async (req, res) => {
     try{
        const postId = req.params.postId;
-       const post = await Post.findById(postId).populate("comments")
+       const post = await Post.findById(postId)
        res.json(post);
     }catch(err){
         console.log(err)

@@ -1,7 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
-const Comment = require('../models/Post.model')
+const Comment = require('../models/Comment.model')
 const User = require('../models/User.model')
 const Post = require('../models/Post.model')
 
@@ -31,11 +31,11 @@ const Post = require('../models/Post.model')
 
 // Create a new comment
 router.post("/new",async (req, res) => {
-    const userId = req.body.createdBy
+    const userId = req.body.user
     const postId = req.body.postId
     try{
         const body = req.body;
-        const newComment = await Comment.create(body);
+        const newComment = await Comment.create({user: req.body.user, body: req.body.body});
         const user = await User.findByIdAndUpdate(userId, {$push: {commented: postId}})
         const post = await Post.findByIdAndUpdate(postId, {$push: {comments: newComment._id}})
         res.json(newComment);
