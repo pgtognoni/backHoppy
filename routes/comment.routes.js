@@ -35,7 +35,7 @@ router.post("/new",async (req, res) => {
     const postId = req.body.postId
     try{        
         const userInfo = await User.findById(userId)
-        const newComment = await Comment.create({user: req.body.user, body: req.body.body, image: userInfo.image, username: userInfo.username});
+        const newComment = await Comment.create({user: req.body.user, body: req.body.body, image: userInfo.image[0], username: userInfo.username});
         const user = await User.findByIdAndUpdate(userId, {$push: {commented: postId}})
         const post = await Post.findByIdAndUpdate(postId, {$push: {comments: newComment._id}})
         res.json(newComment);
@@ -58,8 +58,8 @@ router.post("/new",async (req, res) => {
 router.delete("/:commentId/delete",async (req, res) => {
     try{
         const commentId = req.params.commentId;
-        const deletedComment = await Post.findByIdAnddelete(commentId, body, {new:true});
-        res.json({message:"Comment deleted",deletedComment});
+        const deletedComment = await Comment.findByIdAndDelete(commentId, {new:true});
+        res.json({message:"Comment deleted", deletedComment});
 
     }catch(err){
         console.log(err)

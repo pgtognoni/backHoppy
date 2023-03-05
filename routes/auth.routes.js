@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const isAuthenticated = require('../middlewares/isAuthenticated')
 const User = require('../models/User.model')
+const Post = require('../models/Post.model')
 
 
 router.post('/signup', async (req, res, next) => {
@@ -70,8 +71,18 @@ router.get('/profile', isAuthenticated, async (req, res) => {
     const username = req.payload.data.username
     try {
         //we need to add the populate from the post before returning the user
-        // User.findOne({ username: username }).populate('posts')
-        const user = await User.findOne({ username: username }).populate('commented').populate('liked').populate('published').populate('followers').populate('following')
+        const userFound = await User.findOne({ username: username }).populate('commented').populate('liked').populate('published').populate('followers').populate('following')
+        let published = userFound.published;
+        const publishedArr = []
+        const posts = await Promise.all(published.map(async (post) => {
+          const populated = await Post.findById(post._id).populate('comments')
+          publishedArr.push(populated)
+        }))
+        if (publishedArr.length) {
+          //user.published = publishedArr;
+        } 
+        const user = {...userFound}
+        user.published = publishedArr
         //here we also need to send the user the posts
         res.status(200).json({ user })
     } catch (error) {
