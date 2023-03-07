@@ -39,6 +39,10 @@ const postSchema = new Schema(
     createdBy:{
       type: [Schema.Types.ObjectId],
       ref: 'User'
+    },
+    group: {
+      type: String,
+      enum: ["TRUE", "FALSE"],
     }
   },
   {

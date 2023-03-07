@@ -4,6 +4,7 @@ const router = express.Router();
 const Comment = require('../models/Comment.model')
 const User = require('../models/User.model')
 const Post = require('../models/Post.model')
+const Group = require('../models/Group.model')
 
 
 
@@ -33,11 +34,13 @@ const Post = require('../models/Post.model')
 router.post("/new",async (req, res) => {
     const userId = req.body.user
     const postId = req.body.postId
+    const groupId = req.body.groupId
     try{        
         const userInfo = await User.findById(userId)
         const newComment = await Comment.create({user: req.body.user, body: req.body.body, image: userInfo.image[0], username: userInfo.username});
         const user = await User.findByIdAndUpdate(userId, {$push: {commented: postId}})
         const post = await Post.findByIdAndUpdate(postId, {$push: {comments: newComment._id}})
+        const group = await Group.findByIdAndUpdate(groupId, {$push: {comments: newComment._id}})
         res.json(newComment);
     }catch(err){
         console.log(err)
