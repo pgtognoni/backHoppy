@@ -71,7 +71,7 @@ router.get('/profile', isAuthenticated, async (req, res) => {
     const username = req.payload.data.username
     try {
         //we need to add the populate from the post before returning the user
-        const userFound = await User.findOne({ username: username }).populate('commented').populate('liked').populate('published').populate('followers').populate('following')
+        const userFound = await User.findOne({ username: username }).populate('commented').populate('liked').populate('published').populate('followers').populate('following').sort({createdAt:-1})
         let published = userFound.published;
         let liked = userFound.liked;
         const publishedArr = []
