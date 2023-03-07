@@ -73,16 +73,25 @@ router.get('/profile', isAuthenticated, async (req, res) => {
         //we need to add the populate from the post before returning the user
         const userFound = await User.findOne({ username: username }).populate('commented').populate('liked').populate('published').populate('followers').populate('following')
         let published = userFound.published;
+        let liked = userFound.liked;
         const publishedArr = []
+        const likedArr = []
         const posts = await Promise.all(published.map(async (post) => {
-          const populated = await Post.findById(post._id).populate('comments')
+          const populated = await Post.findById(post._id).populate('comments').populate("createdBy")
           publishedArr.push(populated)
+        }))
+        const likedPosts = await Promise.all(liked.map(async (post) => {
+          const populated = await Post.findById(post._id).populate('comments').populate("createdBy")
+          if(post.createdBy[0] !== userFound._id) {
+            likedArr.push(populated)
+          }
         }))
         if (publishedArr.length) {
           //user.published = publishedArr;
         } 
         const user = {...userFound}
         user.published = publishedArr
+        user.liked = likedArr
         //here we also need to send the user the posts
         res.status(200).json({ user })
     } catch (error) {
