@@ -42,8 +42,25 @@ router.post("/new",async (req, res) => {
 router.put("/:postId/update",async (req, res) => {
     try{
         const body = {...req.body};
+        const createdBy = body.data.createdBy[0]
+        const status = body.status;
+        const data = body.data;
         const postId = req.params.postId;
-       const updatedPost = await Post.findByIdAndUpdate(postId, body, {new:true});
+        const postFound = await Post.findById(postId);
+        const userFound = await User.findById(createdBy);
+        if (status.status === 'like' && userFound) {
+            const updateCurrency = JSON.parse(JSON.stringify(userFound));
+            updateCurrency.currency = userFound.currency + 5;
+            const updateUser = await User.findByIdAndUpdate(createdBy, {$set: {currency: updateCurrency.currency}}, {new: true});
+        }
+        if (status.status === 'dislike' && userFound) {
+            if (postFound.dislikes > 0 && postFound.dislikes % 5 === 0) {
+                const updateCurrency = JSON.parse(JSON.stringify(userFound));
+                updateCurrency.currency = userFound.currency - 5;
+                const updateUser = await User.findByIdAndUpdate(createdBy, {$set: {currency: updateCurrency.currency}}, {new: true});
+            }
+        }
+       const updatedPost = await Post.findByIdAndUpdate(postId, data, {new:true});
        res.json({message:"Post updated successfully",updatedPost});
     }catch(err){
         console.log(err)
