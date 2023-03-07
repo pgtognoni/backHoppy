@@ -93,6 +93,7 @@ router.get('/profile', isAuthenticated, async (req, res) => {
 router.put('/profile', isAuthenticated, async (req, res, next) => {
     const body = req.body
     const username = req.payload.data.username
+    console.log(body)
     try { 
         const user = await User.findOneAndUpdate({ username: username }, body, { new: true })
         res.status(200).json(user)

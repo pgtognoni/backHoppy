@@ -28,6 +28,10 @@ const userSchema = new Schema(
       type: [Schema.Types.ObjectId],
       ref: 'Post'
     },
+    disliked: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Post'
+    },
     published: {
       type: [Schema.Types.ObjectId],
       ref: 'Post'
