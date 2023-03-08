@@ -9,7 +9,7 @@ const Group = require('../models/Group.model')
 // Get all posts
 router.get("/",async (req, res) => {
     try{
-        const posts = await Post.find()
+        const posts = await Post.find().populate('comments').populate("createdBy")
         res.json(posts); 
     }catch(err){
         console.log(err)
