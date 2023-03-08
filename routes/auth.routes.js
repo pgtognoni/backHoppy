@@ -74,8 +74,10 @@ router.get('/profile', isAuthenticated, async (req, res) => {
         const userFound = await User.findOne({ username: username }).populate('commented').populate('liked').populate('published').populate('followers').populate('following').sort({createdAt:-1})
         let published = userFound.published;
         let liked = userFound.liked;
+        let commented = userFound.commented;
         const publishedArr = []
         const likedArr = []
+        const commentedArr = []
         const posts = await Promise.all(published.map(async (post) => {
           const populated = await Post.findById(post._id).populate('comments').populate("createdBy")
           publishedArr.push(populated)
@@ -86,12 +88,20 @@ router.get('/profile', isAuthenticated, async (req, res) => {
             likedArr.push(populated)
           }
         }))
+        const commentedPosts = await Promise.all(commented.map(async (post) => {
+          const populated = await Post.findById(post._id).populate('comments').populate("createdBy")
+          if(post.createdBy[0] !== userFound._id) {
+            commentedArr.push(populated)
+          }
+        }))
+
         if (publishedArr.length) {
           //user.published = publishedArr;
         } 
         const user = {...userFound}
         user.published = publishedArr
         user.liked = likedArr
+        user.commented = commentedArr
         //here we also need to send the user the posts
         res.status(200).json({ user })
     } catch (error) {

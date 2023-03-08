@@ -4,11 +4,12 @@ const isAuthenticated = require('../middlewares/isAuthenticated')
 const Post = require('../models/Post.model')
 const Comment = require('../models/Comment.model')
 const User = require('../models/User.model')
+const Group = require('../models/Group.model')
 
 // Get all posts
 router.get("/",async (req, res) => {
     try{
-        const posts = await Post.find().populate('createdBy').populate('comments').sort({createdAt:-1})
+        const posts = await Post.find().populate('comments').populate("createdBy")
         res.json(posts); 
     }catch(err){
         console.log(err)
@@ -28,10 +29,12 @@ router.get("/:postId", async (req, res) => {
 // Create a new post
 router.post("/new",async (req, res) => {
     const userId = req.body.createdBy
+    const groupId = req.body.groupId
     try{
         const body = {...req.body};
         const newPost = await Post.create(body);
         const user = await User.findByIdAndUpdate(userId, {$push: {published: newPost._id}})
+        const group = await Group.findByIdAndUpdate(groupId, {$push: {posts: newPost._id}})
         res.status(201).json(newPost);
     }catch(err){
         console.log(err)
@@ -70,7 +73,7 @@ router.put("/:postId/update",async (req, res) => {
 router.delete("/:postId/delete",async (req, res) => {
     try{
         const postId = req.params.postId;
-       const deletedPost = await Post.findByIdAnddelete(postId, body, {new:true});
+       const deletedPost = await Post.findByIdAnddelete(postId, {new:true});
        res.json({message:"Post deleted",deletedPost});
 
     }catch(err){

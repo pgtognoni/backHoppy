@@ -36,6 +36,10 @@ const userSchema = new Schema(
       type: [Schema.Types.ObjectId],
       ref: 'Post'
     },
+    groups: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Group'
+    },
     following: {
       type: [Schema.Types.ObjectId],
       ref: 'User'
