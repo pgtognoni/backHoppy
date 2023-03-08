@@ -18,7 +18,7 @@ const userSchema = new Schema(
     },
     image: {
       type: [String],    
-      default: ["https://i.pinimg.com/564x/e7/77/ab/e777ab47741cf8e66f80b5711782f98e.jpg"]
+      default: ["https://i.pinimg.com/564x/e7/77/ab/e777ab47741cf8e66f80b5711782f98e.jpg", "https://moon.ly/uploads/nft/61b9d74b817a5c58561cfc24.jpg"]
     },
     commented: {
       type: [Schema.Types.ObjectId],
