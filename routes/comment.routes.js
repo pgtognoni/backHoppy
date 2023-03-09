@@ -46,6 +46,20 @@ router.post("/new",async (req, res) => {
         console.log(err)
     }
 })
+
+router.post("/group/new",async (req, res) => {
+    const userId = req.body.user
+    const groupId = req.body.groupId
+    try{        
+        const userInfo = await User.findById(userId)
+        const newComment = await Comment.create({user: req.body.user, body: req.body.body, image: userInfo.image[0], username: userInfo.username});
+        const user = await User.findByIdAndUpdate(userId, {$push: {commented: postId}})
+        const group = await Group.findByIdAndUpdate(groupId, {$push: {comments: newComment._id}})
+        res.json(newComment);
+    }catch(err){
+        console.log(err)
+    }
+})
 // Update a comment
 // router.put("/:commentId/update",async (req, res) => {
 //     try{

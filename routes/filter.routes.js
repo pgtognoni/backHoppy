@@ -4,14 +4,13 @@ const Post = require('../models/Post.model');
 const Group = require('../models/Group.model');
 
 
-router.get('/:section', async (req, res) => {
+router.get('posts/:section', async (req, res) => {
     const filter = req.params.section;
     filter.toLowerCase();
     try {
         const posts = await Post.find({'section': filter});
-        const groups = await Group.find({'section': filter});
-        if (posts.length > 0 || groups.length > 0) {
-            res.status(200).json({ posts, groups });
+        if (posts.length > 0) {
+            res.status(200).json({ posts });
         } else {
             res.status(200).json({ message: 'Try another category' });
         }
