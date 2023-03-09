@@ -61,7 +61,7 @@ router.put("/:postId/update",async (req, res) => {
 router.put("/:postId/update/like",async (req, res) => {
     try{
         const body = {...req.body};
-        const createdBy = body.data.createdBy[0]
+        const createdBy = body.data.createdBy
         const data = body.data;
         console.log(data)
         const postId = req.params.postId;
@@ -81,7 +81,7 @@ router.put("/:postId/update/like",async (req, res) => {
 router.put("/:postId/update/dislike",async (req, res) => {
     try{
         const body = {...req.body};
-        const createdBy = body.data.createdBy[0]
+        const createdBy = body.data.createdBy
         const data = body.data;
         const postId = req.params.postId;
         const postFound = await Post.findById(postId);
