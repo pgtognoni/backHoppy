@@ -37,7 +37,7 @@ const postSchema = new Schema(
       min: 0
     },
     createdBy:{
-      type: [Schema.Types.ObjectId],
+      type: Schema.Types.ObjectId,
       ref: 'User'
     },
     group: {

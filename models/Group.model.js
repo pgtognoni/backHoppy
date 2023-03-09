@@ -9,12 +9,12 @@ const groupSchema = new Schema(
   {
     name: {
       type: String,
-      required: [true, "Please add a Name"],
+      // required: [true, "Please add a Name"],
       unique: [true, "That Name is already taken"],
       trim: true,
     },
     createdBy:{
-        type: [Schema.Types.ObjectId],
+        type: Schema.Types.ObjectId,
         ref: 'User'
     },
     createdByImg: {
