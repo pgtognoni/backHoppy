@@ -48,7 +48,7 @@ router.post("/new",async (req, res) => {
 router.put("/:postId/update",async (req, res) => {
     try{
         const body = {...req.body};
-        const createdBy = body.data.createdBy[0]
+        const createdBy = body.data.createdBy
         const data = body.data;
         const postId = req.params.postId;
         const updatedPost = await Post.findByIdAndUpdate(postId, data, {new:true});
