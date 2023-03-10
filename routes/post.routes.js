@@ -48,8 +48,8 @@ router.post("/new",async (req, res) => {
 router.put("/:postId/update",async (req, res) => {
     try{
         const body = {...req.body};
-        //const createdBy = body.data.createdBy
-        //const data = body.data;
+        const createdBy = body.data.createdBy[0]
+        const data = body.data;
         const postId = req.params.postId;
         const updatedPost = await Post.findByIdAndUpdate(postId, body, {new:true});
         res.json({message:"Post updated successfully",updatedPost});
