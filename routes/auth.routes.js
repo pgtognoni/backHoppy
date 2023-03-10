@@ -29,7 +29,7 @@ router.post('/login', async (req, res, next) => {
   const body = req.body
   try {
     /* Try to get your user from the DB */
-    const user = await User.findOne({username: body.username})
+    const user = await User.findOne({username: body.username}).populate('groups')
     /* If your user exists, check if the password is correct */
     if (user && bcrypt.compareSync(body.password, user.password)) {
     /* If your password is correct, sign the JWT using jsonwebtoken */
@@ -44,6 +44,7 @@ router.post('/login', async (req, res, next) => {
       }
     )
     const {password, ...newUser} = user._doc
+    console.log(newUser)
    
     res.status(200).json({token: authToken, user: newUser})
     }
@@ -71,7 +72,7 @@ router.get('/profile', isAuthenticated, async (req, res) => {
     const username = req.payload.data.username
     try {
         //we need to add the populate from the post before returning the user
-        const userFound = await User.findOne({ username: username }).populate('commented').populate('liked').populate('published').populate('followers').populate('following')
+        const userFound = await User.findOne({ username: username }).populate('commented').populate('liked').populate('published').populate('followers').populate('following').sort({createdAt:-1})
         let published = userFound.published;
         let liked = userFound.liked;
         let commented = userFound.commented;

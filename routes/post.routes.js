@@ -9,7 +9,7 @@ const Group = require('../models/Group.model')
 // Get all posts
 router.get("/",async (req, res) => {
     try{
-        const posts = await Post.find({'group': 'FALSE'}).populate('comments').populate("createdBy")
+        const posts = await Post.find({'group': 'FALSE'}).populate('comments').populate("createdBy").sort({createdAt:-1})
         res.json(posts); 
     }catch(err){
         console.log(err)
@@ -48,10 +48,10 @@ router.post("/new",async (req, res) => {
 router.put("/:postId/update",async (req, res) => {
     try{
         const body = {...req.body};
-        const createdBy = body.data.createdBy[0]
-        const data = body.data;
+        //const createdBy = body.data.createdBy
+        //const data = body.data;
         const postId = req.params.postId;
-        const updatedPost = await Post.findByIdAndUpdate(postId, data, {new:true});
+        const updatedPost = await Post.findByIdAndUpdate(postId, body, {new:true});
         res.json({message:"Post updated successfully",updatedPost});
     }catch(err){
         console.log(err)
@@ -61,7 +61,7 @@ router.put("/:postId/update",async (req, res) => {
 router.put("/:postId/update/like",async (req, res) => {
     try{
         const body = {...req.body};
-        const createdBy = body.data.createdBy[0]
+        const createdBy = body.data.createdBy
         const data = body.data;
         console.log(data)
         const postId = req.params.postId;
@@ -70,6 +70,7 @@ router.put("/:postId/update/like",async (req, res) => {
             const updateCurrency = JSON.parse(JSON.stringify(userFound));
             updateCurrency.currency = userFound.currency + 5;
             const updateUser = await User.findByIdAndUpdate(createdBy, {$set: {currency: updateCurrency.currency}}, {new: true});
+            console.log(updateUser)
         }
        const updatedPost = await Post.findByIdAndUpdate(postId, data, {new:true});
        res.json({message:"Post updated successfully",updatedPost});
@@ -81,7 +82,7 @@ router.put("/:postId/update/like",async (req, res) => {
 router.put("/:postId/update/dislike",async (req, res) => {
     try{
         const body = {...req.body};
-        const createdBy = body.data.createdBy[0]
+        const createdBy = body.data.createdBy
         const data = body.data;
         const postId = req.params.postId;
         const postFound = await Post.findById(postId);

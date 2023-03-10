@@ -19,7 +19,7 @@ router.get("/",async (req, res) => {
 router.post("/new", isAuthenticated, async (req, res) => {
     const body = req.body;
     const tags = req.body.tags.toLowerCase().split(' ')
-    body.tags = tags
+    //body.tags = tags
     console.log(body)
     try {
         const user = await User.findById(body.createdBy)
