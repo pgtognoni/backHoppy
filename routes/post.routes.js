@@ -30,14 +30,12 @@ router.get("/:postId", async (req, res) => {
 router.post("/new",async (req, res) => {
     const userId = req.body.createdBy
     const groupId = req.body.groupId
-    console.log(req.body)
     try{
         const body = {...req.body};
         const newPost = await Post.create(body);
         const user = await User.findByIdAndUpdate(userId, {$push: {published: newPost._id}})
         const group = await Group.findByIdAndUpdate(groupId, {$push: {posts: newPost._id}})
         const resPost = await Post.findById(newPost._id).populate('createdBy')
-        console.log(resPost)
         res.status(201).json(resPost);
     }catch(err){
         console.log(err)
@@ -48,7 +46,7 @@ router.post("/new",async (req, res) => {
 router.put("/:postId/update",async (req, res) => {
     try{
         const body = {...req.body};
-        const createdBy = body.data.createdBy[0]
+        const createdBy = body.data.createdBy
         const data = body.data;
         const postId = req.params.postId;
         const updatedPost = await Post.findByIdAndUpdate(postId, body, {new:true});
@@ -63,14 +61,12 @@ router.put("/:postId/update/like",async (req, res) => {
         const body = {...req.body};
         const createdBy = body.data.createdBy
         const data = body.data;
-        console.log(data)
         const postId = req.params.postId;
         const userFound = await User.findById(createdBy);
         if (userFound) {
             const updateCurrency = JSON.parse(JSON.stringify(userFound));
             updateCurrency.currency = userFound.currency + 5;
             const updateUser = await User.findByIdAndUpdate(createdBy, {$set: {currency: updateCurrency.currency}}, {new: true});
-            console.log(updateUser)
         }
        const updatedPost = await Post.findByIdAndUpdate(postId, data, {new:true});
        res.json({message:"Post updated successfully",updatedPost});

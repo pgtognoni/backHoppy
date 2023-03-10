@@ -4,12 +4,12 @@ const bcrypt = require('bcryptjs')
 const isAuthenticated = require('../middlewares/isAuthenticated')
 const User = require('../models/User.model')
 const Post = require('../models/Post.model')
+const Group = require('../models/Group.model')
 
 
 router.post('/signup', async (req, res, next) => {
   /* Get back the payload from your request, as it's a POST you can access req.body */
   const body = req.body
-  console.log(body)
   try {
     /* Hash the password using bcryptjs */
     const salt = bcrypt.genSaltSync(13)
@@ -44,7 +44,6 @@ router.post('/login', async (req, res, next) => {
       }
     )
     const {password, ...newUser} = user._doc
-    console.log(newUser)
    
     res.status(200).json({token: authToken, user: newUser})
     }
@@ -59,7 +58,7 @@ router.get('/verify',isAuthenticated, async (req, res, next) => {
   try {
     if (req.payload) {
       const username = req.payload.data.username
-      const user = await User.findOne({username: username})
+      const user = await User.findOne({username: username}).populate('groups')
       const {password, ...newUser} = user._doc
       res.status(200).json({user: newUser})
       }
@@ -120,6 +119,17 @@ router.put('/profile', isAuthenticated, async (req, res, next) => {
         console.log(error)
     }
  })
+
+ router.get("/update/:id/groups", async (req, res, next) => {
+  const id = req.params.id
+  try { 
+      const user = await User.findById(id).populate('groups')
+      res.status(200).json(user)
+  } catch (error) { 
+      console.log(error)
+  }
+})
+
 
  router.delete('/delete', isAuthenticated, async (req, res, next) => {
     const username = req.payload.data.username

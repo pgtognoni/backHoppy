@@ -25,9 +25,9 @@ router.post("/new", isAuthenticated, async (req, res) => {
         const user = await User.findById(body.createdBy)
         const username = user.username;
         const image = user.image[0];
-        console.log(user.username)
         const group = await Group.create({...body, createdByImg: image, createdByName: username, members: body.createdBy})
-        const userUpdate = await User.findByIdAndUpdate({_id: user._id}, {$push: {groups: group._id}})
+        const userUpdate = await User.findByIdAndUpdate(user._id, {$push: {groups: group._id}})
+        console.log(userUpdate)
         res.status(201).json(group)
     } catch (err) {
         console.log(err)
@@ -96,7 +96,7 @@ router.put("/join/:id", isAuthenticated, async (req, res) => {
     const id = req.params.id;
     try {
         const groupFound = await Group.findByIdAndUpdate({_id: id}, {$push: {members: body.data}}, { new: true })
-        console.log(groupFound.members)
+        const userFound = await User.findByIdAndUpdate({_id: body.data}, {$push: {groups: groupFound._id}}, { new: true })
         res.status(200).json({message: 'Joined group'})
     } catch (err) {
         console.log(err)
